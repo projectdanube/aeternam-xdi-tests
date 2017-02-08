@@ -1,0 +1,10 @@
+(=!:uuid:1111)/$ref/
+/$is$ref/(=!:uuid:1111)
+=!:uuid:1111#name<#first><#name>/&/"Alice"
+=!:uuid:1111#name<#last><#name>/&/"Bauer"
+=!:uuid:1111<#birth><#country>/&/"Austria"
+=!:uuid:1111<#gender>/&/"female"
+=!:uuid:1111#address<#locality>/&/"Vienna"
+=!:uuid:1111#address<#street>/&/"My Street 123"
+=!:uuid:1111#address<#postal><#code>/&/"1000"
+=!:uuid:1111#address<#country>/&/"Austria"

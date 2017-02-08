@@ -1,0 +1,11 @@
+log4j.log
+.externalToolBuilders
+.DS_Store
+.classpath
+.project
+graph.xdi
+/.settings/
+/bin/
+/target/
+alice-graph.xdi
+
