@@ -1,6 +1,14 @@
 =!:uuid:3c3c[$msg]*!:uuid:m-1/$from/(=!:uuid:3c3c)
 =!:uuid:3c3c[$msg]*!:uuid:m-1/$to/(=!:uuid:1a1a)
 =!:uuid:3c3c[$msg]*!:uuid:m-1/$contract/(=!:uuid:1111/+isæn)$contract
-(=!:uuid:3c3c[$msg]*!:uuid:m-1$do/$get){}/$is#/+isæn#medical#record
+=!:uuid:3c3c[$msg]*!:uuid:m-1$do/$get/=!:uuid:1111#medical[#record]
 =!:uuid:3c3c[$msg]*!:uuid:m-1<$sig>/&/"...signed by sender..."
 =!:uuid:3c3c[$msg]*!:uuid:m-1<$t>/&/"...timestamp..."
+=!:uuid:3c3c[$msg]*!:uuid:m-2/$from/(=!:uuid:3c3c)
+=!:uuid:3c3c[$msg]*!:uuid:m-2/$to/(=!:uuid:1a1a)
+=!:uuid:3c3c[$msg]*!:uuid:m-2/$contract/(=!:uuid:1111/+isæn)$contract
+=!:uuid:3c3c[$msg]*!:uuid:m-2$do/$connect/$set{$contract}
+=!:uuid:3c3c[$msg]*!:uuid:m-2$do$connect{$set}/$is/=!:uuid:1111#medical[#record]
+=!:uuid:3c3c[$msg]*!:uuid:m-2<$sig>/&/"...signed by sender..."
+=!:uuid:3c3c[$msg]*!:uuid:m-2<$sig><$valid>/&/true
+=!:uuid:3c3c[$msg]*!:uuid:m-2<$t>/&/"...timestamp..."

@@ -1,7 +1,3 @@
-/$is$ref/(=!:uuid:1111)
-(=!:uuid:1111)/$ref/
-=!:uuid:1a1a/$ref/=!:uuid:1111
-(=!:uuid:1a1a)/$ref/(=!:uuid:1111)
 =!:uuid:1111#medical[#record]*!:uuid:r-1<#blood><#pressure>/&/"130 over 90"
 =!:uuid:1111#medical[#record]*!:uuid:r-1<#blood><#sugar>/&/"5.5 mmol/L"
 =!:uuid:1111#medical[#record]*!:uuid:r-1<#pulse>/&/"90"
