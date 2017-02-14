@@ -18,9 +18,13 @@ import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.features.aggregation.Aggregation;
 import xdi2.core.features.linkcontracts.instance.RootLinkContract;
+import xdi2.core.features.nodetypes.XdiInnerRoot;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.syntax.XDIAddress;
 import xdi2.core.util.CopyUtil;
+import xdi2.core.util.CopyUtil.ExtractXDIAddressCopyStrategy;
+import xdi2.core.util.GraphUtil;
+import xdi2.core.util.XDIAddressUtil;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.container.impl.graph.GraphMessagingContainer;
@@ -86,6 +90,17 @@ public class AevatarMain extends AevatarMainUI {
 		xdi(this.aliceGraph);
 	}
 
+	protected void aliceViewMedicalRecordsActionPerformed(ActionEvent e) {
+
+		Graph tempGraph = GraphUtil.graph();
+		ContextNode contextNode1111 = this.aliceGraph.getDeepContextNode(XDIAddress.create("=!:uuid:1111#medical[#record]"));
+		ContextNode contextNode1a1a = this.aliceGraph.getDeepContextNode(XDIAddress.create("=!:uuid:1a1a#medical[#record]"));
+		if (contextNode1111 != null) CopyUtil.copyContextNode(contextNode1111, tempGraph, null);
+		if (contextNode1a1a != null) CopyUtil.copyContextNode(contextNode1a1a, tempGraph, null);
+
+		xdi(tempGraph);
+	}
+
 	protected void doctorSendRequestMedicalRecordsActionPerformed(ActionEvent e) {
 
 		try {
@@ -124,17 +139,20 @@ public class AevatarMain extends AevatarMainUI {
 
 			// extract and remember incoming requests in Alice's identity container
 
-			pendingMessages = new ArrayList<Message> ();
-			ContextNode pendingMessagesContextNodes = response.getResultGraph().getDeepContextNode(XDIAddress.create("[$msg]"));
-			for (ContextNode penndingMessageContextNode : Aggregation.getAggregationContextNodes(pendingMessagesContextNodes)) {
+			Graph tempGraph = GraphUtil.graph();
+			CopyUtil.copyGraph(response.getResultGraph(), tempGraph, new ExtractXDIAddressCopyStrategy(XdiInnerRoot.class, false, false, false, false, true));
 
-				Message pendingMessage = Message.fromContextNode(penndingMessageContextNode);
+			pendingMessages = new ArrayList<Message> ();
+			ContextNode pendingMessagesContextNodes = tempGraph.getDeepContextNode(XDIAddress.create("[$msg]"));
+			for (ContextNode pendingMessageContextNode : Aggregation.getAggregationContextNodes(pendingMessagesContextNodes)) {
+
+				Message pendingMessage = Message.fromContextNode(pendingMessageContextNode);
 				pendingMessages.add(pendingMessage);
 			}
 
 			// display to the user
 
-			xdi(response.getGraph());
+			xdi(tempGraph);
 		} catch (Exception ex) {
 
 			error(ex);
@@ -186,7 +204,7 @@ public class AevatarMain extends AevatarMainUI {
 
 			for (Message pendingMessage : pendingMessages) {
 
-				m.createDelOperation(pendingMessage.getContextNode().getXDIAddress());
+				m.createDelOperation(XDIAddressUtil.concatXDIAddresses(XDIAddress.create("(=!:uuid:3c3c/=!:uuid:1111)"), pendingMessage.getContextNode().getXDIAddress()));
 			}
 
 			TransportMessagingResponse response = aliceLocalClient.send(me);
@@ -227,6 +245,8 @@ public class AevatarMain extends AevatarMainUI {
 	}
 
 	private void error(Exception ex) {
+
+		ex.printStackTrace(System.err);
 
 		JOptionPane.showMessageDialog(null, (ex.getMessage() != null && ex.getMessage().length() > 1) ? ex.getMessage() : ex.getClass().getName());
 	}

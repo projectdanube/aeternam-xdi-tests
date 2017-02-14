@@ -54,6 +54,10 @@ public class AevatarMainUI extends JFrame {
 		// TODO add your code here
 	}
 
+	protected void aliceViewMedicalRecordsActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - wertwer ggsdfbs
@@ -62,6 +66,7 @@ public class AevatarMainUI extends JFrame {
 		label5 = new JLabel();
 		panel1 = new JPanel();
 		aliceViewIdentityContainer = new JButton();
+		aliceViewMedicalRecords = new JButton();
 		doctorSendRequestMedicalRecords = new JButton();
 		aliceViewPendingMessages = new JButton();
 		aliceModifyPendingMessages = new JButton();
@@ -101,9 +106,9 @@ public class AevatarMainUI extends JFrame {
 		{
 			panel1.setLayout(new GridBagLayout());
 			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0};
-			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0};
+			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0};
 			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0E-4};
+			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0E-4};
 
 			//---- aliceViewIdentityContainer ----
 			aliceViewIdentityContainer.setText("Alice: View identity Container");
@@ -112,17 +117,24 @@ public class AevatarMainUI extends JFrame {
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 10, 0), 0, 0));
 
+			//---- aliceViewMedicalRecords ----
+			aliceViewMedicalRecords.setText("Alice: View Medical Records");
+			aliceViewMedicalRecords.addActionListener(e -> aliceViewMedicalRecordsActionPerformed(e));
+			panel1.add(aliceViewMedicalRecords, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 10, 0), 0, 0));
+
 			//---- doctorSendRequestMedicalRecords ----
 			doctorSendRequestMedicalRecords.setText("Doctor: Send Request for Medical Records");
 			doctorSendRequestMedicalRecords.addActionListener(e -> doctorSendRequestMedicalRecordsActionPerformed(e));
-			panel1.add(doctorSendRequestMedicalRecords, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+			panel1.add(doctorSendRequestMedicalRecords, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 10, 0), 0, 0));
 
 			//---- aliceViewPendingMessages ----
 			aliceViewPendingMessages.setText("Alice: View Pending Messages");
 			aliceViewPendingMessages.addActionListener(e -> aliceViewPendingMessagesActionPerformed(e));
-			panel1.add(aliceViewPendingMessages, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+			panel1.add(aliceViewPendingMessages, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 10, 0), 0, 0));
 
@@ -130,28 +142,28 @@ public class AevatarMainUI extends JFrame {
 			aliceModifyPendingMessages.setText("Alice: Modify Pending Messages");
 			aliceModifyPendingMessages.setEnabled(false);
 			aliceModifyPendingMessages.addActionListener(e -> aliceModifyPendingMessagesActionPerformed(e));
-			panel1.add(aliceModifyPendingMessages, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
+			panel1.add(aliceModifyPendingMessages, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 10, 0), 0, 0));
 
 			//---- aliceApprovePendingMessages ----
 			aliceApprovePendingMessages.setText("Alice: Approve Pending Messages");
 			aliceApprovePendingMessages.addActionListener(e -> aliceApprovePendingMessagesActionPerformed(e));
-			panel1.add(aliceApprovePendingMessages, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
+			panel1.add(aliceApprovePendingMessages, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 10, 0), 0, 0));
 
 			//---- aliceRejectPendingMessages ----
 			aliceRejectPendingMessages.setText("Alice: Reject Pending Messages");
 			aliceRejectPendingMessages.addActionListener(e -> aliceRejectPendingMessagesActionPerformed(e));
-			panel1.add(aliceRejectPendingMessages, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
+			panel1.add(aliceRejectPendingMessages, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 10, 0), 0, 0));
 
 			//---- doctorSendNewMedicalRecord ----
 			doctorSendNewMedicalRecord.setText("Doctor: Send New Medical Record");
 			doctorSendNewMedicalRecord.addActionListener(e -> doctorSendNewMedicalRecordActionPerformed(e));
-			panel1.add(doctorSendNewMedicalRecord, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
+			panel1.add(doctorSendNewMedicalRecord, new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 0, 0), 0, 0));
 		}
@@ -168,6 +180,7 @@ public class AevatarMainUI extends JFrame {
 	protected JLabel label5;
 	protected JPanel panel1;
 	protected JButton aliceViewIdentityContainer;
+	protected JButton aliceViewMedicalRecords;
 	protected JButton doctorSendRequestMedicalRecords;
 	protected JButton aliceViewPendingMessages;
 	protected JButton aliceModifyPendingMessages;
