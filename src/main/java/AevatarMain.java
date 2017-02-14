@@ -21,6 +21,7 @@ import xdi2.core.features.linkcontracts.instance.RootLinkContract;
 import xdi2.core.features.nodetypes.XdiInnerRoot;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.syntax.XDIAddress;
+import xdi2.core.syntax.XDIStatement;
 import xdi2.core.util.CopyUtil;
 import xdi2.core.util.CopyUtil.ExtractXDIAddressCopyStrategy;
 import xdi2.core.util.GraphUtil;
@@ -31,6 +32,11 @@ import xdi2.messaging.container.impl.graph.GraphMessagingContainer;
 import xdi2.messaging.container.interceptor.impl.connect.ConnectInterceptor;
 import xdi2.messaging.container.interceptor.impl.security.signature.SignatureInterceptor;
 import xdi2.messaging.container.interceptor.impl.send.SendInterceptor;
+import xdi2.messaging.operations.ConnectOperation;
+import xdi2.messaging.operations.DelOperation;
+import xdi2.messaging.operations.GetOperation;
+import xdi2.messaging.operations.Operation;
+import xdi2.messaging.operations.SetOperation;
 import xdi2.messaging.response.TransportMessagingResponse;
 
 public class AevatarMain extends AevatarMainUI {
@@ -87,7 +93,9 @@ public class AevatarMain extends AevatarMainUI {
 
 	protected void aliceViewIdentityContainerActionPerformed(ActionEvent e) {
 
-		xdi(this.aliceGraph);
+		// display to the user
+
+		display(this.aliceGraph);
 	}
 
 	protected void aliceViewMedicalRecordsActionPerformed(ActionEvent e) {
@@ -98,7 +106,46 @@ public class AevatarMain extends AevatarMainUI {
 		if (contextNode1111 != null) CopyUtil.copyContextNode(contextNode1111, tempGraph, null);
 		if (contextNode1a1a != null) CopyUtil.copyContextNode(contextNode1a1a, tempGraph, null);
 
-		xdi(tempGraph);
+		// build human-readable interpretation
+
+		StringBuffer interpretation = new StringBuffer();
+
+		ContextNode medicalRecords = 
+		
+		for (Message pendingMessage : pendingMessages) {
+
+			interpretation.append(pendingMessage.getSenderXDIAddress() + " is sending you a request...\n");
+
+			for (Operation operation : pendingMessage.getOperations()) {
+
+				interpretation.append("--> to ");
+
+				if (operation instanceof GetOperation)
+					interpretation.append("GET");
+				else if (operation instanceof SetOperation)
+					interpretation.append("SET");
+				else if (operation instanceof DelOperation)
+					interpretation.append("DELETE");
+				else if (operation instanceof ConnectOperation)
+					interpretation.append("CONNECT TO");
+				else
+					interpretation.append("(?DO SOMETHING UNKNOWN?) TO");
+				
+				interpretation.append(" the following: \n");
+
+				if (operation.getTargetXDIAddress() != null)
+					interpretation.append("----> " + operation.getTargetXDIAddress());
+
+				if (operation.getTargetXDIStatements() != null) for (XDIStatement targetXDIStatement : operation.getTargetXDIStatements())
+					interpretation.append("----> " + targetXDIStatement);
+			}
+
+			interpretation.append("\n\n");
+		}
+
+		// display to the user
+
+		display(tempGraph);
 	}
 
 	protected void doctorSendRequestMedicalRecordsActionPerformed(ActionEvent e) {
@@ -113,7 +160,7 @@ public class AevatarMain extends AevatarMainUI {
 
 			// display to the user
 
-			xdi(response.getGraph());
+			display(response.getGraph());
 		} catch (Exception ex) {
 
 			error(ex);
@@ -150,9 +197,44 @@ public class AevatarMain extends AevatarMainUI {
 				pendingMessages.add(pendingMessage);
 			}
 
+			// build human-readable interpretation
+
+			StringBuffer interpretation = new StringBuffer();
+
+			for (Message pendingMessage : pendingMessages) {
+
+				interpretation.append(pendingMessage.getSenderXDIAddress() + " is sending you a request...\n");
+
+				for (Operation operation : pendingMessage.getOperations()) {
+
+					interpretation.append("--> to ");
+
+					if (operation instanceof GetOperation)
+						interpretation.append("GET");
+					else if (operation instanceof SetOperation)
+						interpretation.append("SET");
+					else if (operation instanceof DelOperation)
+						interpretation.append("DELETE");
+					else if (operation instanceof ConnectOperation)
+						interpretation.append("CONNECT TO");
+					else
+						interpretation.append("(?DO SOMETHING UNKNOWN?) TO");
+					
+					interpretation.append(" the following: \n");
+
+					if (operation.getTargetXDIAddress() != null)
+						interpretation.append("----> " + operation.getTargetXDIAddress());
+
+					if (operation.getTargetXDIStatements() != null) for (XDIStatement targetXDIStatement : operation.getTargetXDIStatements())
+						interpretation.append("----> " + targetXDIStatement);
+				}
+
+				interpretation.append("\n\n");
+			}
+
 			// display to the user
 
-			xdi(tempGraph);
+			display(tempGraph, interpretation.toString());
 		} catch (Exception ex) {
 
 			error(ex);
@@ -184,7 +266,7 @@ public class AevatarMain extends AevatarMainUI {
 
 			// display to the user
 
-			xdi(response.getGraph());
+			display(response.getGraph());
 		} catch (Exception ex) {
 
 			error(ex);
@@ -211,7 +293,7 @@ public class AevatarMain extends AevatarMainUI {
 
 			// display to the user
 
-			xdi(response.getGraph());
+			display(response.getGraph());
 		} catch (Exception ex) {
 
 			error(ex);
@@ -230,18 +312,23 @@ public class AevatarMain extends AevatarMainUI {
 
 			// display to the user
 
-			xdi(response.getGraph());
+			display(response.getGraph());
 		} catch (Exception ex) {
 
 			error(ex);
 		}
 	}
 
-	private void xdi(Graph g) {
+	private void display(Graph g, String text) {
 
-		JFrame frame = new AevatarXdi(g);
+		JFrame frame = new AevatarXdi(g, text);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
+	}
+
+	private void display(Graph g) {
+		
+		display(g, "");
 	}
 
 	private void error(Exception ex) {

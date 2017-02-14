@@ -25,7 +25,7 @@ public class AevatarXdiUI extends JFrame {
 		initComponents();
 	}
 
-	protected void okButtonActionPerformed(ActionEvent e) {
+	protected void xdiButtonActionPerformed(ActionEvent e) {
 		// TODO add your code here
 	}
 
@@ -33,7 +33,11 @@ public class AevatarXdiUI extends JFrame {
 		// TODO add your code here
 	}
 
-	protected void xdiButtonActionPerformed(ActionEvent e) {
+	protected void describeButtonActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	protected void okButtonActionPerformed(ActionEvent e) {
 		// TODO add your code here
 	}
 
@@ -106,7 +110,7 @@ public class AevatarXdiUI extends JFrame {
 
 				//---- describeButton ----
 				describeButton.setText("Describe");
-				describeButton.addActionListener(e -> okButtonActionPerformed(e));
+				describeButton.addActionListener(e -> describeButtonActionPerformed(e));
 				buttonBar.add(describeButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 					new Insets(0, 0, 0, 0), 0, 0));

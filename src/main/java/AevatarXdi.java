@@ -13,21 +13,23 @@ import xdi2.core.io.XDIWriterRegistry;
 public class AevatarXdi extends AevatarXdiUI {
 
 	private Graph g;
+	private String description;
 
-	public AevatarXdi(Graph g) {
+	public AevatarXdi(Graph g, String description) {
 
 		super();
 
 		initComponents();
 
 		this.g = g;
+		this.description = description;
 		this.viewXDI();
 	}
 
 	@Override
-	protected void okButtonActionPerformed(ActionEvent e) {
+	protected void xdiButtonActionPerformed(ActionEvent e) {
 
-		this.dispose();
+		this.viewXDI();
 	}
 
 	@Override
@@ -37,9 +39,26 @@ public class AevatarXdi extends AevatarXdiUI {
 	}
 
 	@Override
-	protected void xdiButtonActionPerformed(ActionEvent e) {
+	protected void describeButtonActionPerformed(ActionEvent e) {
 
-		this.viewXDI();
+		this.viewDescribe();
+	}
+
+	@Override
+	protected void okButtonActionPerformed(ActionEvent e) {
+
+		this.dispose();
+	}
+
+	private void viewXDI() {
+
+		StringWriter w = new StringWriter();
+		try {
+			XDIWriterRegistry.forFormat("XDI DISPLAY", null).write(this.g, w);
+		} catch (IOException ex) {
+			this.error(ex);
+		}
+		this.xdiTextPane.setText(w.toString());
 	}
 
 	private void viewJXD() {
@@ -53,15 +72,9 @@ public class AevatarXdi extends AevatarXdiUI {
 		this.xdiTextPane.setText(w.toString());
 	}
 
-	private void viewXDI() {
+	private void viewDescribe() {
 
-		StringWriter w = new StringWriter();
-		try {
-			XDIWriterRegistry.forFormat("XDI DISPLAY", null).write(this.g, w);
-		} catch (IOException ex) {
-			this.error(ex);
-		}
-		this.xdiTextPane.setText(w.toString());
+		this.xdiTextPane.setText(this.description);
 	}
 
 	private void initComponents() {
