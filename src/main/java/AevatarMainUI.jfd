@@ -36,7 +36,7 @@ new FormModel {
 				name: "panel1"
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "aliceViewIdentityContainer"
-					"text": "Alice: View identity Container"
+					"text": "Alice: View Identity Container"
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "aliceViewIdentityContainerActionPerformed", true ) )
 				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 				add( new FormComponent( "javax.swing.JButton" ) {

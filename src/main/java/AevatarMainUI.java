@@ -111,7 +111,7 @@ public class AevatarMainUI extends JFrame {
 			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0E-4};
 
 			//---- aliceViewIdentityContainer ----
-			aliceViewIdentityContainer.setText("Alice: View identity Container");
+			aliceViewIdentityContainer.setText("Alice: View Identity Container");
 			aliceViewIdentityContainer.addActionListener(e -> aliceViewIdentityContainerActionPerformed(e));
 			panel1.add(aliceViewIdentityContainer, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,

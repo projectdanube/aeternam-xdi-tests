@@ -3,7 +3,9 @@
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -18,14 +20,21 @@ import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.features.aggregation.Aggregation;
 import xdi2.core.features.linkcontracts.instance.RootLinkContract;
+import xdi2.core.features.nodetypes.XdiEntityCollection;
+import xdi2.core.features.nodetypes.XdiEntityInstance;
 import xdi2.core.features.nodetypes.XdiInnerRoot;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.syntax.XDIAddress;
+import xdi2.core.syntax.XDIArc;
 import xdi2.core.syntax.XDIStatement;
 import xdi2.core.util.CopyUtil;
 import xdi2.core.util.CopyUtil.ExtractXDIAddressCopyStrategy;
 import xdi2.core.util.GraphUtil;
 import xdi2.core.util.XDIAddressUtil;
+import xdi2.core.util.iterators.CompositeIterator;
+import xdi2.core.util.iterators.IteratorListMaker;
+import xdi2.core.util.iterators.NotNullIterator;
+import xdi2.core.util.iterators.ReadOnlyIterator;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.container.impl.graph.GraphMessagingContainer;
@@ -100,52 +109,41 @@ public class AevatarMain extends AevatarMainUI {
 
 	protected void aliceViewMedicalRecordsActionPerformed(ActionEvent e) {
 
-		Graph tempGraph = GraphUtil.graph();
-		ContextNode contextNode1111 = this.aliceGraph.getDeepContextNode(XDIAddress.create("=!:uuid:1111#medical[#record]"));
-		ContextNode contextNode1a1a = this.aliceGraph.getDeepContextNode(XDIAddress.create("=!:uuid:1a1a#medical[#record]"));
-		if (contextNode1111 != null) CopyUtil.copyContextNode(contextNode1111, tempGraph, null);
-		if (contextNode1a1a != null) CopyUtil.copyContextNode(contextNode1a1a, tempGraph, null);
+		try {
 
-		// build human-readable interpretation
+			Graph tempGraph = GraphUtil.graph();
+			ContextNode contextNode1111 = this.aliceGraph.getDeepContextNode(XDIAddress.create("=!:uuid:1111#medical[#record]"));
+			ContextNode contextNode1a1a = this.aliceGraph.getDeepContextNode(XDIAddress.create("=!:uuid:1a1a#medical[#record]"));
+			if (contextNode1111 != null) CopyUtil.copyContextNode(contextNode1111, tempGraph, null);
+			if (contextNode1a1a != null) CopyUtil.copyContextNode(contextNode1a1a, tempGraph, null);
 
-		StringBuffer interpretation = new StringBuffer();
+			// build human-readable interpretation
 
-		ContextNode medicalRecords = 
-		
-		for (Message pendingMessage : pendingMessages) {
+			StringBuffer interpretation = new StringBuffer();
 
-			interpretation.append(pendingMessage.getSenderXDIAddress() + " is sending you a request...\n");
+			List<XdiEntityInstance> instances = new ArrayList<XdiEntityInstance> ();
+			if (contextNode1111 != null) instances.addAll(new IteratorListMaker(XdiEntityCollection.fromContextNode(contextNode1111).getXdiInstances()).list());
+			if (contextNode1a1a != null) instances.addAll(new IteratorListMaker(XdiEntityCollection.fromContextNode(contextNode1a1a).getXdiInstances()).list());
 
-			for (Operation operation : pendingMessage.getOperations()) {
+			for (XdiEntityInstance instance : instances) {
 
-				interpretation.append("--> to ");
+				interpretation.append("Medical record " + instance.getXDIAddress() + ":\n");
 
-				if (operation instanceof GetOperation)
-					interpretation.append("GET");
-				else if (operation instanceof SetOperation)
-					interpretation.append("SET");
-				else if (operation instanceof DelOperation)
-					interpretation.append("DELETE");
-				else if (operation instanceof ConnectOperation)
-					interpretation.append("CONNECT TO");
-				else
-					interpretation.append("(?DO SOMETHING UNKNOWN?) TO");
-				
-				interpretation.append(" the following: \n");
+				interpretation.append("--> Blood pressure: " + instance.getXdiAttributeSingleton(XDIAddress.create("<#blood><#pressure>"), false).getLiteralData() + "\n");
+				interpretation.append("--> Blood sugar: " + instance.getXdiAttributeSingleton(XDIAddress.create("<#blood><#sugar>"), false).getLiteralData() + "\n");
+				interpretation.append("--> Pulse: " + instance.getXdiAttributeSingleton(XDIAddress.create("<#pulse>"), false).getLiteralData() + "\n");
+				interpretation.append("--> Weight: " + instance.getXdiAttributeSingleton(XDIAddress.create("<#weight>"), false).getLiteralData() + "\n");
 
-				if (operation.getTargetXDIAddress() != null)
-					interpretation.append("----> " + operation.getTargetXDIAddress());
-
-				if (operation.getTargetXDIStatements() != null) for (XDIStatement targetXDIStatement : operation.getTargetXDIStatements())
-					interpretation.append("----> " + targetXDIStatement);
+				interpretation.append("\n");
 			}
 
-			interpretation.append("\n\n");
+			// display to the user
+
+			display(tempGraph, interpretation.toString());
+		} catch (Exception ex) {
+
+			error(ex);
 		}
-
-		// display to the user
-
-		display(tempGraph);
 	}
 
 	protected void doctorSendRequestMedicalRecordsActionPerformed(ActionEvent e) {
@@ -216,17 +214,26 @@ public class AevatarMain extends AevatarMainUI {
 					else if (operation instanceof DelOperation)
 						interpretation.append("DELETE");
 					else if (operation instanceof ConnectOperation)
-						interpretation.append("CONNECT TO");
+						interpretation.append("CREATE LINK CONTRACT FOR");
 					else
 						interpretation.append("(?DO SOMETHING UNKNOWN?) TO");
-					
+
 					interpretation.append(" the following: \n");
 
 					if (operation.getTargetXDIAddress() != null)
-						interpretation.append("----> " + operation.getTargetXDIAddress());
+						interpretation.append("----> " + operation.getTargetXDIAddress() + "\n");
 
 					if (operation.getTargetXDIStatements() != null) for (XDIStatement targetXDIStatement : operation.getTargetXDIStatements())
-						interpretation.append("----> " + targetXDIStatement);
+						interpretation.append("----> " + targetXDIStatement + "\n");
+
+					if (! operation.getVariableValues().isEmpty()) {
+
+						for (Map.Entry<XDIArc, Object> entry : operation.getVariableValues().entrySet()) {
+
+							interpretation.append("----> VARIABLE: " + entry.getKey() + " -> " + entry.getValue() + "\n");
+						}
+
+					}
 				}
 
 				interpretation.append("\n\n");
@@ -327,7 +334,7 @@ public class AevatarMain extends AevatarMainUI {
 	}
 
 	private void display(Graph g) {
-		
+
 		display(g, "");
 	}
 
